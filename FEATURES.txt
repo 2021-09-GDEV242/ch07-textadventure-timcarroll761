@@ -1,0 +1,13 @@
+B level features implemented
+-Items
+-Rooms can have multiple items
+-Player can carry one or more items from room to room
+
+A level features implemented
+-eat actually changes the game state
+-one way door (roof access)
+-locked doors (key in janitors closet, boiler room is locked, roof access locks behind you, same key set)
+
+Misc
+-inventory management
+-dropped items go on the ground in the current room and can be re picked up

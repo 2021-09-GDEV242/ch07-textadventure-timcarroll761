@@ -1,6 +1,7 @@
 import java.util.Set;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.ArrayList;
 
 /**
  * Class Room - a room in an adventure game.
@@ -12,14 +13,16 @@ import java.util.Iterator;
  * connected to other rooms via exits.  For each existing exit, the room 
  * stores a reference to the neighboring room.
  * 
- * @author  Michael Kölling and David J. Barnes
- * @version 2016.02.29
+ * @author  Michael Kölling and David J. Barnes and Tim Carroll
+ * @version 2021.11.01
  */
 
 public class Room 
 {
     private String description;
     private HashMap<String, Room> exits;        // stores exits of this room.
+    private ArrayList<Item> items;
+    private boolean locked;
 
     /**
      * Create a room described "description". Initially, it has
@@ -27,10 +30,12 @@ public class Room
      * "an open court yard".
      * @param description The room's description.
      */
-    public Room(String description) 
+    public Room(boolean locked, String description) 
     {
         this.description = description;
+        this.locked = locked;
         exits = new HashMap<>();
+        items = new ArrayList<Item>();
     }
 
     /**
@@ -60,7 +65,11 @@ public class Room
      */
     public String getLongDescription()
     {
-        return "You are " + description + ".\n" + getExitString();
+        String output = "You are " + description + ".\n";
+        if (items.size() > 0)
+            output = output.concat("Here you find:\n" + seeItems() + "\n");
+        output = output.concat(getExitString());
+        return output;
     }
 
     /**
@@ -87,6 +96,65 @@ public class Room
     public Room getExit(String direction) 
     {
         return exits.get(direction);
+    }
+    
+    /**
+     * Add an item to the items on the floor in this room
+     * @param item the item to add
+     */
+    public void addItem(Item item)
+    {
+        items.add(item);
+    }
+    
+    /**
+     * @return a String of all the items in this room
+     */
+    public String seeItems()
+    {
+        String output = "";
+        for (Item item : items) {
+            output = output.concat(item.getDescription() + " ");
+        }
+        return output;
+    }
+    
+    /**
+     * Take all of the items from this room
+     * @return an ArrayList of all the taken items
+     */
+    public ArrayList<Item> takeItems()
+    {
+        ArrayList<Item> output = new ArrayList<Item>();
+        for (Item item : items) {
+            output.add(item);
+        }
+        items.clear();
+        return output;
+    }
+    
+    /**
+     * Lock this room
+     */
+    public void lock()
+    {
+        locked = true;
+    }
+    
+    /**
+     * Unlock this room
+     */
+    public void unlock()
+    {
+        locked = false;
+    }
+    
+    /**
+     * @return a boolean that describes if this room is locked
+     */
+    public boolean isLocked()
+    {
+        return locked;
     }
 }
 
